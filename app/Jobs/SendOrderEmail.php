@@ -39,11 +39,18 @@ class SendOrderEmail implements ShouldQueue
      */
     public function handle()
     {
+
+
+        // !! exception TESTING
+        throw new \Exception("I am throwing this exception", 1);
+
+
+
+
         $recipient = env('MAIL_TEST_RECIPIENT');
 
-
         Mail::to($recipient)->send(new OrderShipped($this->order));
-        
+
         Log::info('Emailed order '. $this->order->id);
     }
 }
