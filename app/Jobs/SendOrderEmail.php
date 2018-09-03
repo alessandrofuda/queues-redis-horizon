@@ -45,12 +45,25 @@ class SendOrderEmail implements ShouldQueue
         // throw new \Exception("I am throwing this exception", 1);
 
 
+        // Allow only 2 emails every 1 second
+        Redis::throttle('my-mailtrap')->allow(2)->every(1)->then(function() {  // my-mailtrap is the name of unique 'key' in redis
 
 
-        $recipient = env('MAIL_TEST_RECIPIENT');
+            $recipient = env('MAIL_TEST_RECIPIENT');
+            Mail::to($recipient)->send(new OrderShipped($this->order));
+            Log::info('Emailed order '. $this->order->id);
 
-        Mail::to($recipient)->send(new OrderShipped($this->order));
 
-        Log::info('Emailed order '. $this->order->id);
+        }, function() {
+
+
+            // Could not obtain lock; this job will be re-queued
+            return $this->release(2);
+
+
+        });   
+
     }
+
+
 }
