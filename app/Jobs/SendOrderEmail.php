@@ -42,7 +42,7 @@ class SendOrderEmail implements ShouldQueue
 
 
         // !! exception TESTING
-        throw new \Exception("I am throwing this exception", 1);
+        // throw new \Exception("I am throwing this exception", 1);
 
 
 
