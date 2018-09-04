@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderShipped;
 use App\Order;
@@ -46,7 +46,7 @@ class SendOrderEmail implements ShouldQueue
 
 
         // Allow only 2 emails every 1 second
-        Redis::throttle('my-mailtrap')->allow(2)->every(1)->then(function() {  // my-mailtrap is the name of unique 'key' in redis
+        Redis::throttle('my-mailtrap')->allow(1)->every(2)->then(function() {  // my-mailtrap is the name of unique 'key' in redis
 
 
             $recipient = env('MAIL_TEST_RECIPIENT');

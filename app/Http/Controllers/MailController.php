@@ -14,16 +14,29 @@ use Log;
 
 class MailController extends Controller
 {
+
     public function index() {
 
-    	$order = Order::findOrFail( rand(1,50) );
+    	for ($i=0; $i<20; $i++) {
+
+			$order = Order::findOrFail(rand(1,50));   
+
+			//if (rand(1, 3) > 1) {
+				SendOrderEmail::dispatch($order)->onQueue('default');
+			//} else {
+			//	SendOrderEmail::dispatch($order)->onQueue('sms');
+			//}
+
+    	}
+
     	
-    	SendOrderEmail::dispatch($order);
+    	
+    	// SendOrderEmail::dispatch($order);  // default 
 
-    	Log::info('Dispatched order ' . $order->id);
+    	Log::info('Dispatched orders');  // . $order->id);
 
 
-    	return 'Dispatched order ' . $order->id;
+    	return 'Dispatched orders';  // . $order->id;
 
 
     	// $recipient = env('MAIL_TEST_RECIPIENT');
